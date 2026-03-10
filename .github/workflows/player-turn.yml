@@ -2,11 +2,14 @@ name: Player Two Turn
 
 on:
   schedule:
-    - cron: '30 * * * *'  # every hour, offset 30min from player one
+    - cron: '30 * * * *'  # every hour
   workflow_dispatch:
 
 permissions:
+  actions: write
+  contents: write
   issues: write
+  pull-requests: write
 
 jobs:
   take-turn:
