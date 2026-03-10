@@ -14,23 +14,21 @@ jobs:
     steps:
       - name: Close previous turn issues
         run: |
-          gh issue list --repo ${{ github.repository }} \
-            --label "player-turn" --state open \
+          gh issue list --repo "$REPO" --label "player-turn" --state open \
             --json number --jq '.[].number' | \
-          xargs -I{} gh issue close {} --repo ${{ github.repository }} --comment "Superseded by new turn" || true
+          xargs -I{} gh issue close {} --repo "$REPO" --comment "Superseded by new turn" || true
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
 
       - name: Create turn issue and assign Copilot
         run: |
           gh issue create \
-            --repo ${{ github.repository }} \
+            --repo "$REPO" \
             --title "Player turn: $(date -u '+%Y-%m-%d %H:%M UTC')" \
-            --body "$(cat <<'EOF'
-Take your turn in SandCastle Wars. Follow all instructions in .github/agents/sandcastle-player.agent.md — use the MCP tools to get_state, get_rules, then submit_move.
-EOF
-)" \
+            --body "Take your turn in SandCastle Wars. Follow all instructions in .github/agents/sandcastle-player.agent.md — use the MCP tools to get_state, get_rules, then submit_move." \
             --label "player-turn" \
             --assignee copilot
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
