@@ -6,39 +6,31 @@ on:
   workflow_dispatch:
 
 permissions:
-  issues: write
+  contents: read
 
 jobs:
   take-turn:
     runs-on: ubuntu-latest
     steps:
-      - name: Close previous turn issues
-        run: |
-          gh issue list --repo ${{ github.repository }} \
-            --label "player-turn" --state open \
-            --json number --jq '.[].number' | \
-          xargs -I{} gh issue close {} --repo ${{ github.repository }} --comment "Superseded by new turn" || true
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install GitHub Copilot CLI
+        run: npm install -g @github/copilot
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COPILOT_GITHUB_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
 
-      - name: Create turn issue and assign Copilot
+      - name: Run player agent
         run: |
-          gh issue create \
-            --repo ${{ github.repository }} \
-            --title "Player turn: $(date -u '+%Y-%m-%d %H:%M UTC')" \
-            --body "$(cat <<'EOF'
-Take your turn in SandCastle Wars.
-
-Use the MCP tools (configured in .github/copilot/mcp.json) to:
-1. Call `get_state` to read the current grid
-2. Call `get_rules` to understand valid moves
-3. Decide on the best strategic move
-4. Call `submit_move` to play it
-
-Full instructions: .github/agents/sandcastle-player.agent.md
-EOF
-)" \
-            --label "player-turn" \
-            --assignee copilot
+          AGENT_PROMPT=$(cat .github/agents/sandcastle-player.agent.md)
+          timeout --foreground --signal=TERM --kill-after=30s 300s \
+            copilot --prompt "$AGENT_PROMPT" --allow-all-tools --allow-all-paths < /dev/null || true
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COPILOT_GITHUB_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GAME_API_KEY: ${{ secrets.GAME_API_KEY }}
