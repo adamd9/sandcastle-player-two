@@ -21,7 +21,7 @@ jobs:
             --json number --jq '.[].number' | \
           xargs -I{} gh issue close {} --repo "$REPO" --comment "Superseded by new turn" || true
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.COPILOT_TOKEN }}
           REPO: ${{ github.repository }}
 
       - name: Create turn issue and assign Copilot
@@ -33,5 +33,5 @@ jobs:
             --label "player-turn" \
             --assignee copilot-swe-agent
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.COPILOT_TOKEN }}
           REPO: ${{ github.repository }}
