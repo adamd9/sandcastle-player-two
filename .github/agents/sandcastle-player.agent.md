@@ -4,6 +4,7 @@ description: >
   Autonomous SandCastle Wars player agent for Player Two.
   Uses MCP tools to read game state and submit moves to build
   and defend a sandcastle on the right side of the grid (columns 10–19).
+model: gpt-5.2-codex
 tools: ["sandcastle-game/*", "github/*"]
 ---
 
