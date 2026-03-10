@@ -29,7 +29,7 @@ jobs:
           gh issue create \
             --repo "$REPO" \
             --title "Player turn: $(date -u '+%Y-%m-%d %H:%M UTC')" \
-            --body "Take your turn in SandCastle Wars. Follow all instructions in .github/agents/sandcastle-player.agent.md — use the MCP tools to get_state, get_rules, then submit_move." \
+            --body "Take your turn in SandCastle Wars. Follow all instructions in .github/agents/sandcastle-player.agent.md — use the MCP tools to get_state, get_rules, then submit_turn." \
             --label "player-turn" \
             --assignee copilot-swe-agent
         env:
