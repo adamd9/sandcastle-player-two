@@ -1,0 +1,44 @@
+name: Player Two Turn
+
+on:
+  schedule:
+    - cron: '30 * * * *'  # every hour, offset 30min from player one
+  workflow_dispatch:
+
+permissions:
+  issues: write
+
+jobs:
+  take-turn:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Close previous turn issues
+        run: |
+          gh issue list --repo ${{ github.repository }} \
+            --label "player-turn" --state open \
+            --json number --jq '.[].number' | \
+          xargs -I{} gh issue close {} --repo ${{ github.repository }} --comment "Superseded by new turn" || true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create turn issue and assign Copilot
+        run: |
+          gh issue create \
+            --repo ${{ github.repository }} \
+            --title "Player turn: $(date -u '+%Y-%m-%d %H:%M UTC')" \
+            --body "$(cat <<'EOF'
+Take your turn in SandCastle Wars.
+
+Use the MCP tools (configured in .github/copilot/mcp.json) to:
+1. Call `get_state` to read the current grid
+2. Call `get_rules` to understand valid moves
+3. Decide on the best strategic move
+4. Call `submit_move` to play it
+
+Full instructions: .github/agents/sandcastle-player.agent.md
+EOF
+)" \
+            --label "player-turn" \
+            --assignee copilot
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
