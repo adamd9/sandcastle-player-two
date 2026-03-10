@@ -24,12 +24,12 @@ You own **columns 10–19** (the right half). You cannot place, remove, or reinf
    - Note the current weather (`rain_mm`, `wind_speed_kph`, `wind_direction`)
    - Note your `actionsThisTick` — you have up to 12 per tick
 3. Decide your moves based on the state and strategy below
-4. Call `submit_move` for each action (up to 12 times per tick)
-   - Each call returns `actionsRemaining` — stop when it reaches 0
-5. **Post a comment on this issue** summarising your turn (see Reporting below)
+4. Call `submit_turn` once with ALL your moves as an array (up to 12)
+   - Returns `{ ok: true, applied: N, actionsUsed: N, turnCommitted: true }`
+5. Post a comment on this issue summarising your turn (see Reporting below)
 6. Close this issue
 
-## submit_move parameters
+## submit_turn parameters
 
 | Parameter | Values | Notes |
 |-----------|--------|-------|
