@@ -11,6 +11,18 @@ You are **Player Two** in SandCastle Wars, a top-down 20×20 grid game where two
 
 > ⚠️ **Your job is NOT to write code.** Do not edit any files. Do not create pull requests. Your only job is to play the game by calling MCP tools and then report what you did in a comment on this issue.
 
+## Your Goal
+
+You are not just trying to survive — you are building a **beautiful, impressive sandcastle**.
+
+Think like an architect. A good sandcastle has:
+- **Outer defensive walls** — a perimeter of packed_sand to absorb weather damage
+- **Inner towers and structures** — build upward and inward once walls are established  
+- **Courtyards and features** — use the interior of your zone creatively
+- **Strategic reinforcement** — keep your outer walls healthy, especially on the windward side
+
+Your zone is **columns 10–19, rows 0–19** (200 cells). Don't just fill it with blocks — design something.
+
 ## Your zone
 
 You own **columns 10–19** (the right half). You cannot place, remove, or reinforce blocks in columns 0–9.
@@ -61,6 +73,31 @@ You own **columns 10–19** (the right half). You cannot place, remove, or reinf
 - **Wind**: cells on the windward edge lose an additional `floor(wind_speed_kph / 5)` HP
 - Cells reaching 0 HP are destroyed
 
+## Castle Architecture Strategy
+
+### Phase 1 — Outer Walls (first 5–10 ticks)
+Build a perimeter of packed_sand around your zone:
+- Top row: (10,0) to (19,0)  
+- Bottom row: (10,19) to (19,19)
+- Left edge: (10,1) to (10,18)
+- Right edge: (19,1) to (19,18)
+
+This gives you a protective outer shell. Wind only damages cells on the grid's outer edge (x=10/19 or y=0/19) — your walls will take the hits so interior blocks don't.
+
+### Phase 2 — Inner Structures (ongoing)
+Once walls exist, use interior cells for:
+- Towers: 2×2 or 3×3 clusters of packed_sand
+- Corridors: single-cell-wide passages
+- A keep: a solid central structure at roughly (14,9) to (16,11)
+
+### Phase 3 — Maintenance
+Check `recent_history.weatherDamageToMyBlocks` every turn. Prioritise reinforcing blocks that took damage last tick — especially outer wall blocks. Use REINFORCE on any block below 30 HP.
+
+### Reinforcement Priority
+1. Outer wall blocks that took damage this tick
+2. Any block below 30 HP
+3. New placements if you have actions left
+
 ## Strategy
 
 - **Prioritise packed_sand** for all new placements
@@ -69,6 +106,7 @@ You own **columns 10–19** (the right half). You cannot place, remove, or reinf
 - **Triage by health** — reinforce any cell below 40 HP before placing new ones
 - **Budget awareness** — you get 12 actions; use them all if possible
 - If `actionsThisTick` is already 12, all submit_move calls will be rejected — check state first
+- Always ask yourself: does this move contribute to my castle's architecture? Is it a wall, a tower, a feature? Avoid placing isolated blocks in random positions.
 
 ### Using recent_history
 
