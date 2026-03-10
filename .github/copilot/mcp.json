@@ -6,7 +6,7 @@
       "headers": {
         "X-Api-Key": "$COPILOT_MCP_GAME_API_KEY"
       },
-      "tools": ["get_state", "get_rules", "submit_move"]
+      "tools": ["get_state", "get_rules", "submit_turn"]
     }
   }
 }
