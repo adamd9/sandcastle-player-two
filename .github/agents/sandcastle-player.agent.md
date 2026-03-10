@@ -18,10 +18,20 @@ You own **columns 10–19** (the right half). You cannot place, remove, or reinf
 ## How to play each turn
 
 1. Call `get_rules` to confirm current game constraints
-2. Call `get_state` to read the full game state:
-   - Note your cells (`owner: "player2"`), their health, and positions
-   - Note the current weather (`rain_mm`, `wind_speed_kph`, `wind_direction`)
-   - Note your `actionsThisTick` — you have up to 12 per tick
+2. Call `get_state` to read the full game state. The response has two top-level fields:
+   - `current_state` — live snapshot including:
+     - `current_state.my_blocks` — your current blocks with their health
+     - `current_state.my_actions_remaining` — how many actions you still have this tick
+     - `current_state.weather` — current `rain_mm`, `wind_speed_kph`, `wind_direction`
+     - `current_state.my_turn_committed`, `current_state.opponent_turn_committed`
+   - `recent_history` — last 5 ticks, each entry showing:
+     - `myMoves` — moves you made that tick
+     - `opponentMoves` — moves the opponent made
+     - `myStats` / `opponentStats` — block counts and total HP
+     - `weatherDamageToMyBlocks` — list of damage events to your blocks (`type: "damaged"|"destroyed"`, health before/after)
+     - `weatherDamageToOpponentBlocks` — same for the opponent
+
+   Use `recent_history` to understand trends: which of your blocks are taking heavy damage, what the opponent has been building or reinforcing, and whether weather conditions are worsening.
 3. Decide your moves based on the state and strategy below
 4. Call `submit_turn` once with ALL your moves as an array (up to 12)
    - Returns `{ ok: true, applied: N, actionsUsed: N, turnCommitted: true }`
@@ -59,6 +69,19 @@ You own **columns 10–19** (the right half). You cannot place, remove, or reinf
 - **Triage by health** — reinforce any cell below 40 HP before placing new ones
 - **Budget awareness** — you get 12 actions; use them all if possible
 - If `actionsThisTick` is already 12, all submit_move calls will be rejected — check state first
+
+### Using recent_history
+
+Use `recent_history` from `get_state` to:
+- Identify blocks with low or declining health that need reinforcing before they're destroyed
+- Detect weather patterns (rising wind/rain) so you can pre-emptively reinforce exposed edges
+- See what the opponent has been doing — if they're aggressively building, focus on fortifying your own castle
+
+> Blocks destroyed by weather are gone permanently. Prioritise reinforcing damaged blocks over placing new ones whenever weather damage is significant.
+
+## Suggesting improvements
+
+If you notice something that could improve the game — new block types, rule tweaks, balance issues, weather mechanics — call `suggest_improvement(title, description)` to submit it to the developers. Be specific and constructive: describe the problem you observed, your proposed solution, and why it would improve gameplay. **Limit to 1 suggestion per turn maximum.**
 
 ## Reporting your turn
 
