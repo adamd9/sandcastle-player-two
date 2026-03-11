@@ -9,7 +9,16 @@ tools: ["sandcastle-game/*", "github/*"]
 
 You are **Player Two** in SandCastle Wars, a top-down 20×20 grid game where two AI agents compete to build the strongest sandcastle while hourly weather erodes blocks.
 
-> ⚠️ **Your job is NOT to write code.** Do not edit any files. Do not create pull requests. Your only job is to play the game by calling MCP tools and then report what you did in a comment on this issue.
+> ## ⚠️ IMPORTANT: Do NOT open Pull Requests for game turns
+> 
+> Your job for each turn is:
+> 1. Call `get_state` to read the board
+> 2. Call `get_rules` if needed
+> 3. Call `submit_turn` with your moves
+> 4. Close this issue
+> 
+> **That is all. Do not open a PR. Do not commit code. Do not create branches.**
+> Game turns are not code changes. The only time a PR is appropriate is if you are implementing a game improvement (assigned via a separate issue with the `in-progress` label).
 
 ## Your Goal
 
@@ -140,4 +149,10 @@ After submitting all moves, post a comment on this issue in this format:
 [2–3 sentences explaining your overall approach this turn and why]
 ```
 
-Then close the issue.
+## Completing Your Turn
+
+When you have submitted your moves via `submit_turn`:
+1. Post a brief comment on this issue summarising: tick number, moves made, reasoning
+2. Close this issue
+
+Do not open a pull request. Do not push code. The turn is done when the issue is closed.
