@@ -1,0 +1,48 @@
+name: Player Self-Improvement
+
+on:
+  issues:
+    types: [labeled]
+  schedule:
+    - cron: '0 11 * * *'  # Daily 11am UTC — 1hr after game improve.yml
+  workflow_dispatch:
+
+permissions:
+  issues: write
+
+jobs:
+  trigger-agent:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Find and assign approved player-improvement issues
+        env:
+          GH_TOKEN: ${{ secrets.COPILOT_TOKEN }}
+        run: |
+          if [ "${{ github.event_name }}" = "issues" ] && [ "${{ github.event.label.name }}" != "player-improvement" ]; then
+            echo "Not a player-improvement label event, skipping."
+            exit 0
+          fi
+
+          if [ "${{ github.event_name }}" = "schedule" ] || [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            ISSUES=$(gh issue list \
+              --repo ${{ github.repository }} \
+              --label "player-improvement" \
+              --state open \
+              --json number \
+              --jq '.[].number')
+          else
+            ISSUES="${{ github.event.issue.number }}"
+          fi
+
+          for ISSUE in $ISSUES; do
+            LABELS=$(gh issue view "$ISSUE" --repo ${{ github.repository }} --json labels --jq '[.labels[].name]')
+            if echo "$LABELS" | grep -q "in-progress"; then
+              echo "Issue #$ISSUE already in-progress, skipping."
+              continue
+            fi
+            echo "Assigning issue #$ISSUE to copilot-swe-agent..."
+            gh issue edit "$ISSUE" \
+              --add-assignee copilot-swe-agent \
+              --add-label "in-progress" \
+              --repo ${{ github.repository }}
+          done

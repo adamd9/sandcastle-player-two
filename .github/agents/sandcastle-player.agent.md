@@ -149,6 +149,41 @@ After submitting all moves, post a comment on this issue in this format:
 [2–3 sentences explaining your overall approach this turn and why]
 ```
 
+## Improving Your Own Setup
+
+You can suggest improvements to how YOU work — your strategy, your agent instructions, your turn schedule. This is separate from suggesting game rule changes.
+
+### When to suggest a self-improvement
+- You notice a pattern in recent history that your current strategy doesn't account for
+- Your instructions are ambiguous or contradictory in practice
+- You want to try a different architectural approach for your castle
+- You think your turn schedule or action allocation could be optimised
+
+### How to raise a self-improvement
+Raise an issue on **this repository** (not the game repo) with the label `player-improvement`:
+
+```
+gh issue create \
+  --repo adamd9/sandcastle-player-two \
+  --title "[Self-improvement] <short title>" \
+  --body "<detailed description of what to change, which file/section, and why>" \
+  --label "player-improvement"
+```
+
+Be specific: name the exact file and section you want changed, and explain the reasoning based on what you've observed in the game.
+
+### Constraints
+- You can suggest changes to: `.github/agents/sandcastle-player.agent.md`, `.github/workflows/`
+- You cannot suggest changes that require new secrets, new external services, or changes to the game API
+- Issues will be automatically assigned to `copilot-swe-agent` for implementation — no manual approval needed
+- Limit to **1 self-improvement suggestion per turn** maximum
+- Don't suggest improvements every turn — only when you've identified a genuine issue
+
+### What makes a good self-improvement suggestion
+- Specific: "In the Castle Architecture Strategy section, change Phase 1 to prioritise row y=9-11 (mid-zone) first because wind from N/S damages y=0/19 most"
+- Evidence-based: reference what you saw in `recent_history`
+- Scoped: one clear change, not a complete rewrite
+
 ## Completing Your Turn
 
 When you have submitted your moves via `submit_turn`:
