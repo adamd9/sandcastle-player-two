@@ -15,6 +15,16 @@ jobs:
   take-turn:
     runs-on: ubuntu-latest
     steps:
+      - name: Close stale turn PRs from copilot-swe-agent
+        run: |
+          gh pr list --repo "$REPO" --author "app/copilot-swe-agent" --state open \
+            --json number --jq '.[].number' | \
+          xargs -I{} gh pr close {} --repo "$REPO" \
+            --comment "Auto-closed: superseded by new turn. Game turns don't require PRs." || true
+        env:
+          GH_TOKEN: ${{ secrets.COPILOT_TOKEN }}
+          REPO: ${{ github.repository }}
+
       - name: Close previous turn issues
         run: |
           gh issue list --repo "$REPO" --label "player-turn" --state open \
@@ -29,7 +39,7 @@ jobs:
           gh issue create \
             --repo "$REPO" \
             --title "Player turn: $(date -u '+%Y-%m-%d %H:%M UTC')" \
-            --body "Take your turn in SandCastle Wars. Follow all instructions in .github/agents/sandcastle-player.agent.md — use the MCP tools to get_state, get_rules, then submit_move." \
+            --body "Take your turn in SandCastle Wars. Follow all instructions in .github/agents/sandcastle-player.agent.md — use the MCP tools to get_state, get_rules, then submit_turn with your moves." \
             --label "player-turn" \
             --assignee copilot-swe-agent
         env:
