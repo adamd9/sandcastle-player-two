@@ -3,8 +3,6 @@ name: Player Self-Improvement
 on:
   issues:
     types: [labeled]
-  schedule:
-    - cron: '0 11 * * *'  # Daily 11am UTC — 1hr after game improve.yml
   workflow_dispatch:
 
 permissions:
