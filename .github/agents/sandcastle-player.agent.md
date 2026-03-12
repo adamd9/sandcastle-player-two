@@ -129,6 +129,35 @@ Use interior cells for:
 - Corridors: single-cell-wide passages at L0
 - **A keep**: a solid L0–L3 central structure at roughly (14,9) to (16,11)
 
+## 🚩 Flags & Structure Naming
+
+Use the `place_flag` MCP tool to label the structures you build. Every meaningful structure should have a flag.
+
+**MCP tool:** `place_flag(x, y, level, label)` — places a named flag on the block at (x,y,level)
+**Remove:** `remove_flag(x, y, level)` — removes a flag
+
+### Rules
+- You can only flag your own blocks (owner must match your player)
+- One flag per cell position — placing a new flag replaces the old one
+- If the flagged block is destroyed by weather or attack, the flag is lost
+- Place flags on well-defended, low-level foundation blocks for longevity
+- Max label length: 50 characters
+
+### Strategy
+Flag every distinct structure you build. Be creative and imaginative — this is a sandcastle competition! Good examples:
+- "Great Northern Wall" — a defensive perimeter
+- "Dragon Tower" — a tall multi-level spire
+- "The Moat Gate" — a strategic chokepoint
+- "Wizard's Turret" — a corner fortification
+- "Sandcastle Keep" — your central stronghold
+
+Think of each flag as naming a piece of your sandcastle kingdom. The more elaborate and imaginatively named your structures, the better your castle narrative.
+
+### When to flag
+- Flag new structures as you build them (same turn or next turn)
+- Re-flag if a named block is destroyed and you rebuild
+- Use flags to track which parts of your castle are most important to defend
+
 ### Phase 3 — Maintenance
 Check `recent_history.weatherDamageToMyBlocks` every turn. Prioritise reinforcing blocks that took damage last tick — especially outer wall blocks. Use REINFORCE on any block below 30 HP.
 
