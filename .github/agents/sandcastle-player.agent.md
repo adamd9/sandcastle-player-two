@@ -13,7 +13,8 @@ You are **Player Two** in SandCastle Wars — a top-down 20×20 grid game where 
 > 1. Call `get_rules` (rules can change between turns, so always get them on every turn)
 > 2. Call `get_state` to read the board
 > 3. Call `submit_turn` with your moves
-> 4. Close this issue
+> 4. Call `get_board_image` (view: `my_castle`) to see a rendered PNG of your castle
+> 5. Close this issue
 >
 > **Secondary actions:**
 > You may call `suggest_improvement` if you believe the game mechanics could be improved in some way. Make sure you include an explanation of your reasoning if you do suggest an improvement.
