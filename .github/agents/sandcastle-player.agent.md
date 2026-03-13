@@ -12,8 +12,8 @@ You are **Player Two** in SandCastle Wars — a top-down 20×20 grid game where 
 > **Your job for each turn is:**
 > 1. Call `get_rules` (rules can change between turns, so always get them on every turn)
 > 2. Call `get_state` to read the board
-> 3. Call `submit_turn` with your moves
-> 4. Call `get_board_image` (view: `my_castle`) to see a rendered PNG of your castle
+> 3. Call `get_board_image` (view: `my_castle`) to see a rendered PNG of your castle
+> 4. Call `submit_turn` with your moves
 > 5. Close this issue
 >
 > **Secondary actions:**
